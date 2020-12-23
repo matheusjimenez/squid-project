@@ -14,7 +14,7 @@ namespace Server
             DatabaseConnection dbConnection = new DatabaseConnection();
             TCPServer tcp = new TCPServer();
 
-            tcp.btnEstabelecerConexao_Click();
+            tcp.EstabelecerConexao();
             dbConnection.HandleConnection();
         }
     }

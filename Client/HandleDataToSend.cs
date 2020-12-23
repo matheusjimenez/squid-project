@@ -8,7 +8,7 @@ namespace Client
 {
     class HandleDataToSend
     {
-        public static void SendFile(string IPHostRemoto, int PortaHostRemoto, string nomeCaminhoArquivo, string nomeAbreviadoArquivo)
+        public static void SendFile(string IPHostRemoto, int PortaHostRemoto, string SerealizedData, string nomeAbreviadoArquivo)
         {
             var allText = System.IO.File.ReadAllLines(@"C:\Users\Burned\Downloads\access.log");
 
@@ -19,8 +19,8 @@ namespace Client
                     if (!string.IsNullOrEmpty(IPHostRemoto))
                     {
                         byte[] fileNameByte = Encoding.ASCII.GetBytes(nomeAbreviadoArquivo);
-                        //byte[] fileData = File.ReadAllBytes(nomeCaminhoArquivo);
-                        byte[] fileData = Encoding.ASCII.GetBytes(nomeCaminhoArquivo);
+                        //byte[] fileData = File.ReadAllBytes(SerealizedData);
+                        byte[] fileData = Encoding.ASCII.GetBytes(SerealizedData);
                         byte[] clientData = new byte[4 + fileNameByte.Length + fileData.Length];
                         byte[] fileNameLen = BitConverter.GetBytes(fileNameByte.Length);
                         //
@@ -47,12 +47,11 @@ namespace Client
         {
             string enderecoIP = "127.0.0.1";
             int porta = 1555;
-            string nomeArquivo = jsonData;
             string nomeAbreviadoArquivo = "access.log";
             
             try
             {
-                Task.Factory.StartNew(() => SendFile(enderecoIP, porta, nomeArquivo, nomeAbreviadoArquivo));
+                Task.Factory.StartNew(() => SendFile(enderecoIP, porta, jsonData, nomeAbreviadoArquivo));
                 Console.WriteLine("Arquivo Enviado com sucesso");
             }
             catch (Exception ex)

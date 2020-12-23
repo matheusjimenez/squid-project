@@ -5,12 +5,14 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Server.Models;
+using System.Text.Json;
 
 namespace Server
 {
     class TCPServer
     {
-        public void btnEstabelecerConexao_Click()
+        public void EstabelecerConexao()
         {
             int porta = int.Parse("1555");
             string endIP = "127.0.0.1";
@@ -43,6 +45,7 @@ namespace Server
                         //int thisRead = 0;
                         int blockSize = 1024;
                         Byte[] dataByte = new Byte[blockSize];
+                        List<AcessLog> log = new List<AcessLog>();
                         lock (this)
                         {
                             //string caminhoPastaDestino = @"c:\dados\";
@@ -50,9 +53,11 @@ namespace Server
                             int tamanhoNomeArquivo = BitConverter.ToInt32(dataByte, 0);
                             nomeArquivo = Encoding.ASCII.GetString(dataByte, 4, tamanhoNomeArquivo);
                             //
+
                             Console.WriteLine(Encoding.ASCII.GetString(dataByte, 4 + tamanhoNomeArquivo, (1024 - (4 + tamanhoNomeArquivo))));
                             textLineCounter++;
                             Console.WriteLine("text line: " + textLineCounter);
+                            log.Add(JsonSerializer.Deserialize<AcessLog>(Encoding.ASCII.GetString(dataByte, 4 + tamanhoNomeArquivo, 1024 - (4 + tamanhoNomeArquivo))));
                             //Stream fileStream = File.OpenWrite(caminhoPastaDestino + nomeArquivo);
                             //fileStream.Write(dataByte, 4 + tamanhoNomeArquivo, (1024 - (4 + tamanhoNomeArquivo)));
                             //while (true)

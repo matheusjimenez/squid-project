@@ -16,12 +16,13 @@ namespace Client
         {
             ManageFile file = new ManageFile();
             HandleDataToSend dataToSend = new HandleDataToSend();
-            List<AcessLog> logList = file.ReadFile();
+
+            var data = file.ReadFile();
+            List<AcessLog> logList = data.AcessLogs;
             foreach (AcessLog log in logList)
             {
                 dataToSend.PrepareData(JsonSerializer.Serialize(log));
             }
-            
 
         }
     }

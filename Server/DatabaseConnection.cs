@@ -1,12 +1,47 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Server
 {
-    class DatabaseConnection
+    class DatabaseConnection 
     {
+        public void WriteOnDataBase(List<AcessLog> data)
+        {
+            try
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+                builder.DataSource = "tcp:., 1433";
+                builder.UserID = "SA";
+                builder.Password = "p@ssw0rd_sql";
+                builder.InitialCatalog = "SquidProject";
+
+                StringBuilder sb = new StringBuilder();
+                foreach(AcessLog log in data)
+                {
+                    sb.Append($"INSERT into Logs (Number,RandomNumber,Ipv6,Protocol,Port, Method, Url, Test, Type) VALUES ({log.Number},{log.RandomNumber},{log.Ipv6},{log.Protocol},{log.Port},{log.Method},{log.Url},{log.Test},{log.Type})");
+                }
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand query = new SqlCommand(sb.ToString()))
+                    {
+                        query.Connection = connection;
+
+                        query.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (SqlException err)
+            {
+                Console.WriteLine(err.ToString());
+            }
+        }
         public void HandleConnection()
         {
             try

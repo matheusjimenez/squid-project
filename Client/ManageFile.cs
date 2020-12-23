@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Client
 {
-    class AcessLog
+    public class AcessLog
     {
         public string Number { get; set; }
         public string RandomNumber { get; set; }
@@ -18,9 +18,16 @@ namespace Client
         public string Type { get; set; }
 
     }
+
+    public class IData
+    {
+        public List<AcessLog> AcessLogs { get; set; }
+        public TimeSpan ElapsedTime { get; set; }
+
+    }
     class ManageFile
     {
-        public List<AcessLog> ReadFile()
+        public IData ReadFile()
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -49,7 +56,7 @@ namespace Client
             Console.WriteLine($"Tempo passado: {stopwatch.Elapsed}");
             System.Console.WriteLine("File contains {0}", lines.Length);
 
-            return data;
+            return new IData() { AcessLogs = data, ElapsedTime = stopwatch.Elapsed };
         }
     }
 }
