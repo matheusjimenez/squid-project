@@ -43,7 +43,7 @@ namespace Server
                         string nomeArquivo = string.Empty;
                         NetworkStream networkStream = new NetworkStream(manipularSocket);
                         //int thisRead = 0;
-                        int blockSize = 1024;
+                        int blockSize = 102400;
                         Byte[] dataByte = new Byte[blockSize];
                         List<AcessLog> log = new List<AcessLog>();
                         lock (this)
@@ -58,19 +58,13 @@ namespace Server
                             textLineCounter++;
                             Console.WriteLine("text line: " + textLineCounter);
                             log.Add(JsonSerializer.Deserialize<AcessLog>(Encoding.ASCII.GetString(dataByte, 4 + tamanhoNomeArquivo, 1024 - (4 + tamanhoNomeArquivo))));
-                            //Stream fileStream = File.OpenWrite(caminhoPastaDestino + nomeArquivo);
-                            //fileStream.Write(dataByte, 4 + tamanhoNomeArquivo, (1024 - (4 + tamanhoNomeArquivo)));
-                            //while (true)
-                            //{
-                            //    thisRead = networkStream.Read(dataByte, 0, blockSize);
-                            //    fileStream.Write(dataByte, 0, thisRead);
-                            //    if (thisRead == 0)
-                            //        break;
-                            //}
-                            ////
-                            //fileStream.Close();
+                            
+                            if(log.Count == 36299)
+                            {
+                                DatabaseConnection dc = new DatabaseConnection();
+                                dc.WriteOnDataBase(log);
+                            }
                         }
-                        //NovoArquivoRecebido?.Invoke(this, nomeArquivo);
                         manipularSocket = null;
                     }
                 }
